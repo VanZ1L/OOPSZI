@@ -12,7 +12,7 @@ int main()
 	while (true)
 	{
 		system("cls");
-		cout << "Меню ЛР3 циклы Do While" << endl
+		cout << "Меню ЛР3 циклы While" << endl
 			<< "[1] Задание 1 " << endl
 			<< "[2] Задание 2 " << endl
 			<< "[3] Задание 3 " << endl
