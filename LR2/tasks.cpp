@@ -2,8 +2,7 @@
 using namespace std;
 bool isInArea(double x, double y)
 {
-	if (x * x + y * y > 1 || (x < 0 && y < 0)) return 0;
-	else return 1;
+	return ! (x * x + y * y > 1 || (x < 0 && y < 0));
 }
 void Task1()
 {
@@ -15,9 +14,7 @@ void Task1()
 }
 double f(double x)
 {
-	double g;
-	(x <= 3) ? (g = x * x - 3 * x + 9) : (g = 1 / (x * x * x + 6));
-	return (g);
+	return (x <= 3) ? (x * x - 3 * x + 9) : (1 / (x * x * x + 6));
 }
 void Task2()
 {
