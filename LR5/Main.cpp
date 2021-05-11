@@ -1,15 +1,16 @@
 #include <iostream>
 using namespace std;
 
+
 class Queue
 {
 private:
 	struct Node
 	{
 		int data;
-		struct Node * link;
+		struct Node* link;
 	};
-	struct Node *front, *rear;
+	struct Node* front, * rear;
 	int mSize;
 public:
 	// Конструктор
@@ -20,7 +21,7 @@ public:
 		mSize = 0;
 	}
 	// конструктор копирования
-	Queue(const Queue &other)
+	Queue(const Queue& other)
 	{
 		front = NULL;
 		rear = NULL;
@@ -28,13 +29,13 @@ public:
 		struct Node* temp = new Node;
 		while (temp->link != other.front)
 		{
-			enQueue(temp->data);
+			Push(temp->data);
 			temp = temp->link;
 		}
-		enQueue(temp->data);
+		Push(temp->data);
 	}
 	// конструктор перемещения
-	Queue(Queue &&other)
+	Queue(Queue&& other)
 	{
 		front = NULL;
 		rear = NULL;
@@ -42,10 +43,10 @@ public:
 		struct Node* temp = new Node;
 		while (temp->link != other.front)
 		{
-			enQueue(other.deQueue());
+			Push(other.Pop());
 			temp = temp->link;
 		}
-		enQueue(temp->data);
+		Push(temp->data);
 
 		other.front = nullptr;
 		other.rear = nullptr;
@@ -57,16 +58,16 @@ public:
 		this->front = NULL;
 		this->rear = NULL;
 		/* delete this->rear; */
-		
+
 	}
 	// Push
-	void enQueue(const int &value)
+	void Push(const int& value)
 	{
 		struct Node* temp = new Node;
 		temp->data = value;
 		if (this->front == NULL)
 			this->front = temp;
-		else 
+		else
 			this->rear->link = temp;
 		/*-----------------------------*/
 		this->rear = temp;
@@ -74,7 +75,7 @@ public:
 		mSize++;
 	}
 	// Pop
-	int deQueue()
+	int Pop()
 	{
 		if (this->front == NULL)
 		{
@@ -90,7 +91,7 @@ public:
 			this->front = NULL;
 			this->rear = NULL;
 		} // если в очереди больше чем 1 узел
-		else{
+		else {
 			struct Node* temp = this->front;
 			value = temp->data;
 			this->front = this->front->link;
@@ -120,7 +121,7 @@ public:
 		return this->front->data;
 	}
 	//operations
-	friend std::ostream& operator<<(std::ostream &out, const Queue &q)
+	friend std::ostream& operator<<(std::ostream& out, const Queue& q)
 	{
 		struct Node* temp = q.front;
 		out << "\n Элементы в кольцевой очереди: ";
@@ -133,7 +134,7 @@ public:
 		return out;
 	};
 	// operator
-	Queue &operator=(const Queue &other)
+	Queue& operator=(const Queue& other)
 	{
 		if (this == &other)
 			return *this;
@@ -143,12 +144,12 @@ public:
 		struct Node* temp = new Node;
 		while (temp->link != other.front)
 		{
-			enQueue(temp->data);
+			Push(temp->data);
 			temp = temp->link;
 		}
-		enQueue(temp->data);
+		Push(temp->data);
 	}
-	Queue &operator=(Queue &&other)
+	Queue& operator=(Queue&& other)
 	{
 		if (this == &other)
 			return *this;
@@ -158,16 +159,14 @@ public:
 		struct Node* temp = new Node;
 		while (temp->link != other.front)
 		{
-			enQueue(other.deQueue());
+			Push(other.Pop());
 			temp = temp->link;
 		}
-		enQueue(temp->data);
+		Push(temp->data);
 	}
 };
 
-//std::ostream& operator<< (std::ostream &out, const Queue &q)
 
-/* Driver of the program */
 int main()
 {
 	setlocale(LC_ALL, "rus");
@@ -175,12 +174,12 @@ int main()
 	Queue* q = new Queue;
 
 	// Вставка элементов
-	q->enQueue(1);
-	q->enQueue(2);
-	q->enQueue(3);
-	q->enQueue(13);
-	q->enQueue(23);
-	q->enQueue(33);
+	q->Push(1);
+	q->Push(2);
+	q->Push(3);
+	q->Push(13);
+	q->Push(23);
+	q->Push(33);
 	// Просмотр вершины
 	std::cout << "\n | Первый элемент = " << q->Peek();
 	// Просмотр очереди
@@ -188,12 +187,12 @@ int main()
 
 	// Удаление элементов из очереди
 	std::cout << "\n | Удаляем 3 элемента с начала: ";
-	q->deQueue(); q->deQueue(); q->deQueue();
+	q->Pop(); q->Pop(); q->Pop();
 	// Повторный просмотр очереди
 	std::cout << *q;
 
-	q->enQueue(9);
-	q->enQueue(20);
+	q->Push(9);
+	q->Push(20);
 	q->displayQueue();
 	std::cout << "\n | Размер очереди = " << q->GetSize();
 	delete q;

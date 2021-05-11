@@ -5,8 +5,8 @@ template<typename T>
 class Base
 {
 public:
-	virtual void enQueue(const T &value) {}
-	virtual T deQueue() { return 0; }
+	virtual void Push(const T& value) {}
+	virtual T Pop() { return 0; }
 	virtual T Peek() { return 0; }
 	virtual int GetSize() { return 0; }
 	virtual void displayQueue() {}
@@ -17,21 +17,21 @@ class Queue : Base<T>
 {
 public:
 	Queue();
-	Queue(const Queue &other);
-	Queue(Queue &&other);
+	Queue(const Queue& other);
+	Queue(Queue&& other);
 	~Queue();
 
 	int GetSize();
-	void enQueue(T data); // push_back
-	T deQueue(); // pop_front
+	void Push(T data); // push_back
+	T Pop(); // pop_front
 	T Peek();
 	bool empty();
 	void displayQueue();
-	friend std::ostream& operator<<(std::ostream &out, const Queue &q)
+	friend std::ostream& operator<<(std::ostream& out, const Queue& q)
 	{
-		Node<T> *temp = q.head_;
+		Node<T>* temp = q.head_;
 		out << "\n Элементы в очереди: ";
-		while (temp->pNext_ != q.tail_)
+		while (temp->pNext_ != NULL)
 		{
 			out << temp->data_ << " ";
 			temp = temp->pNext_;
@@ -39,30 +39,30 @@ public:
 		out << temp->data_ << " ";
 		return out;
 	};
-	Queue<T> &operator=(const Queue<T> &other);
-	Queue<T> &operator=(Queue<T> &&other);
+	Queue<T>& operator=(const Queue<T>& other);
+	Queue<T>& operator=(Queue<T>&& other);
 
 private:
 	template<typename T>
 	class Node
 	{
 	public:
-		Node(T data, Node *pNext = NULL, Node *pPrev = NULL)
+		Node(T data, Node* pNext = NULL, Node* pPrev = NULL)
 		{
 			data_ = data;
 			pNext_ = pNext;
 			pPrev_ = pPrev;
 		}
 
-		Node *pNext_;
-		Node *pPrev_;
+		Node* pNext_;
+		Node* pPrev_;
 		T data_;
 	};
 
 	void pop_front();
 	void push_front(T data);
-	Node<T> *head_;
-	Node<T> *tail_;
+	Node<T>* head_;
+	Node<T>* tail_;
 	int size_;
 };
 
@@ -75,33 +75,33 @@ Queue<T>::Queue()
 }
 
 template<typename T>
-Queue<T>::Queue(const Queue &other)
+Queue<T>::Queue(const Queue& other)
 {
 	head_ = NULL;
 	tail_ = NULL;
 	size_ = 0;
-	Node<T> *temp = new Node<T>();
+	Node<T>* temp = new Node<T>();
 	while (temp->pNext_ != other.tail_)
 	{
-		enQueue(temp->data_);
+		Push(temp->data_);
 		temp = temp->pNext_;
 	}
-	enQueue(temp->data_);
+	Push(temp->data_);
 }
 
 template<typename T>
-Queue<T>::Queue(Queue &&other)
+Queue<T>::Queue(Queue&& other)
 {
 	head_ = NULL;
 	tail_ = NULL;
 	size_ = 0;
-	Node<T> *temp = new Node<T>();
+	Node<T>* temp = new Node<T>();
 	while (temp->pNext_ != other.tail_)
 	{
-		enQueue(other.deQueue());
+		Push(other.Pop());
 		temp = temp->pNext_;
 	}
-	enQueue(temp->data_);
+	Push(temp->data_);
 }
 
 template<typename T>
@@ -117,7 +117,7 @@ void Queue<T>::push_front(T data)
 	size_++;
 }
 template <typename T>
-void Queue<T>::enQueue(T data)
+void Queue<T>::Push(T data)
 {
 	if (head_ == NULL)
 	{
@@ -136,16 +136,16 @@ void Queue<T>::enQueue(T data)
 template <typename T>
 void Queue<T>::pop_front()
 {
-	Node<T> *temp = head_; // Запоминаем адрес головного элемента
+	Node<T>* temp = head_; // Запоминаем адрес головного элемента
 	head_ = head_->pNext_; // Смещаем голову списка на следующий узел
 	delete temp; // Удаляем предыдущий за головой узел
 	size_--;
 }
 
 template <typename T>
-T Queue<T>::deQueue()
+T Queue<T>::Pop()
 {
-	Node<T> *temp = head_;
+	Node<T>* temp = head_;
 	T value = temp->data_;
 	head_ = head_->pNext_;
 	delete temp;
@@ -176,7 +176,7 @@ bool Queue<T>::empty()
 template <typename T>
 void Queue<T>::displayQueue()
 {
-	Node<T> *temp = head_;
+	Node<T>* temp = head_;
 	std::cout << "\n Элементы в очереди: ";
 	while (temp->pNext_ != NULL)
 	{
@@ -186,68 +186,68 @@ void Queue<T>::displayQueue()
 	std::cout << temp->data_ << " " << std::endl;
 }
 template <typename T>
-Queue<T>& Queue<T>::operator=(const Queue<T> &other)
+Queue<T>& Queue<T>::operator=(const Queue<T>& other)
 {
 	if (this == &other)
 		return *this;
 	head_ = NULL;
 	tail_ = NULL;
 	size_ = 0;
-	Node<T> *temp = new Node<T>();
+	Node<T>* temp = new Node<T>();
 	while (temp->pNext_ != other.tail_)
 	{
-		enQueue(temp->data_);
+		Push(temp->data_);
 		temp = temp->pNext_;
 	}
-	enQueue(temp->data_);
+	Push(temp->data_);
 }
 template <typename T>
-Queue<T>& Queue<T>::operator=(Queue<T> &&other)
+Queue<T>& Queue<T>::operator=(Queue<T>&& other)
 {
 	if (this == &other)
 		return *this;
 	head_ = NULL;
 	tail_ = NULL;
 	size_ = 0;
-	Node<T> *temp = new Node<T>();
+	Node<T>* temp = new Node<T>();
 	while (temp->pNext_ != other.tail_)
 	{
-		enQueue(other.deQueue());
+		Push(other.Pop());
 		temp = temp->pNext_;
 	}
-	enQueue(temp->data);
+	Push(temp->data);
 }
-//-----------------------------------------------------------------------------------------
+
 
 // Тестовый пример
 int main()
 {
 	setlocale(LC_ALL, "rus");
 
-	Queue<int> *q = new Queue<int>;
-	Queue<int> *qc;
+	Queue<int>* q = new Queue<int>;
+	Queue<int>* qc;
 
 	// Вставка элементов
-	q->enQueue(1);
-	q->enQueue(2);
-	q->enQueue(3);
-	q->enQueue(13);
-	q->enQueue(23);
-	q->enQueue(33);
+	q->Push(1);
+	q->Push(2);
+	q->Push(3);
+	q->Push(13);
+	q->Push(23);
+	q->Push(33);
 
 	std::cout << "\n | Первый элемент = " << q->Peek() << std::endl;
 
 	q->displayQueue();
 
 	std::cout << "\n | Удаляем 3 элемента с начала: ";
-	q->deQueue();
-	q->deQueue();
-	q->deQueue();
+	q->Pop();
+	q->Pop();
+	q->Pop();
 
 	std::cout << *q << std::endl;
 
-	q->enQueue(9);
-	q->enQueue(20);
+	q->Push(9);
+	q->Push(20);
 
 	q->displayQueue();
 	std::cout << "\n | Размер очереди = " << q->GetSize();
@@ -262,3 +262,4 @@ int main()
 
 	return 0;
 }
+
